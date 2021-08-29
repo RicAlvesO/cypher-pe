@@ -4,8 +4,9 @@ import os.path
 print("\n  .================.\n /                  \\\n*       CYPHER       *\n \\                  /\n  '================'\n")
 
 usr = list(input("User: "))
+us=''.join(usr)
 pss = list(getpass.getpass("Password: "))
-
+ps=''.join(pss)
 keyl=[]
 
 while True:
@@ -24,7 +25,19 @@ key=''.join(keyl)
 key=''.join(str(ord(c)) for c in key)
 l=len(key)
 
-sf='./.safe.txt'
+sf='./Profiles/.'+us+'.txt'
+
+tch=us+' : '+ps+' (Cypher)'
+j=0
+check=''
+for d in tch:
+    h=ord(d)+(int(key[j])*(int(key[j])-1))
+    if h>126:
+        h-=94
+    check+=chr(h)
+    j+=1
+    if j==l:
+        j=0
 
 if os.path.isfile(sf):
     f = open(sf,'r')
@@ -33,7 +46,7 @@ if os.path.isfile(sf):
     j=0
     m=''
     for d in c:
-        h=ord(d)-int(key[j])
+        h=ord(d)-(int(key[j])*(int(key[j])-1))
         if h<32:
             h+=94
         m+=chr(h)
@@ -41,22 +54,11 @@ if os.path.isfile(sf):
         if j==l:
             j=0
     f.close()
-    if m[:-1]!="encryption security check code":
+    if m[:-1]!=tch:
         quit()
 else:
-    j=0
     f = open(sf,'w')
-    tcrp="encryption security check code"
-    c=''
-    for d in tcrp:
-        h=ord(d)+int(key[j])
-        if h>126:
-            h-=94
-        c+=chr(h)
-        j+=1
-        if j==l:
-            j=0
-    f.write(c)
+    f.write(check)
     f.write('\n')
     f.close()
 
@@ -73,7 +75,7 @@ while i!=0:
         tcrp=name+' : '+secret+' ('+note+')'
         c=''
         for d in tcrp:
-            h=ord(d)+int(key[j])
+            h=ord(d)+(int(key[j])*(int(key[j])-1))
             if h>126:
                 h-=94
             c+=chr(h)
@@ -90,7 +92,7 @@ while i!=0:
             j=0
             m=''
             for d in c:
-                h=ord(d)-int(key[j])
+                h=ord(d)-(int(key[j])*(int(key[j])-1))
                 if h<32:
                     h+=94
                 m+=chr(h)
