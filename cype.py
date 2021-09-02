@@ -26,13 +26,14 @@ def menu(sf,key,l):
     #Quit Program
     elif i==0:
         clear()
+        print('Exiting...\n')
         quit()
     #Loop Menu
     else:
         menu(sf,key,l)
 
 #Check Authentication Method
-def checklog(sf,key,tch,l):
+def checklog(sf,key,tch,l,cr):
     #Login Authenticator Key
     j=0
     check=''
@@ -46,7 +47,7 @@ def checklog(sf,key,tch,l):
         if j==l:
             j=0
     #Check if Profile exists
-    if os.path.isfile(sf):
+    if os.path.isfile(sf) and cr==2:
         f = open(sf,'r')
         f.seek(0)
         c=f.readline()
@@ -68,14 +69,25 @@ def checklog(sf,key,tch,l):
         #Wrong Login
         else:
             clear()
+            print('Wrong Password!\n')
             quit()
     #Create new user Profile
-    else:
+    elif cr == 1 and not(os.path.isfile(sf)):
         f = open(sf,'w')
         f.write(check)
         f.write('\n')
         f.close()
         menu(sf,key,l)
+    elif cr==1:
+        clear()
+        print("User already exists!")
+        input()
+        start()
+    elif cr==2:
+        clear()
+        print("User doesn't exist!")
+        input()
+        start()
 
 #Add new Credentials to user Profile
 def adder(sf,key,l):
@@ -129,6 +141,20 @@ def looker(sf,key,l):
 #Login Menu
 def start():
     clear()
+    while True:
+        cr = int(input("\n1) Create User\n2) LogIn\n0) Exit\n\n-> "))
+        #Credentional Adder
+        if cr == 1 or cr == 2:
+            break;
+        #Quit Program
+        elif cr == 0:
+            clear()
+            print('Exiting...\n')
+            quit()
+    login(cr)
+
+def login(cr):    
+    clear()
     #Get User Login Info
     usr = list(input("User: "))
     us=''.join(usr)
@@ -156,7 +182,7 @@ def start():
     sf='./Profiles/.'+us+'.txt'
     tch=us+' : '+ps+' (Cypher)'
 
-    checklog(sf,key,tch,l)
+    checklog(sf,key,tch,l,cr)
 
 #Program Start
 start()
